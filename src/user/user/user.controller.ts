@@ -11,6 +11,7 @@ export class UserController {
         private service: UserService,
         private connection: Connection,
         private mailService: MailService,
+        private userRepository: UserService,
     ) {
 
     }
@@ -18,6 +19,7 @@ export class UserController {
     @Get('/connection')
     async getConnectionName(): Promise<string> {
         this.mailService.send();
+        this.userRepository.sayHello('Alice');
         return this.connection.getName();
     }
 

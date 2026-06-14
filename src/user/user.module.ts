@@ -3,7 +3,7 @@ import { UserController } from './user/user.controller';
 import { UserService } from './user/user.service';
 import { Connection, MySQLConnection, PostgreSQLConnection } from './connection/connection';
 import { mailService, MailService } from './mail/mail.service';
-import { UserRepository } from './user-repository/user-repository';
+import { createUserRepository, UserRepository } from './user-repository/user-repository';
 
 @Module({
     controllers: [UserController],
@@ -16,7 +16,12 @@ import { UserRepository } from './user-repository/user-repository';
 
             provide: MailService,
             useValue: mailService,
-        }, UserRepository
+        },{
+            provide: UserRepository,
+            useFactory: (connection: Connection) => createUserRepository(connection),
+            inject: [Connection],
+        }
+        
     ]
 })
 export class UserModule {}
