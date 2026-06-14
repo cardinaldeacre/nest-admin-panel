@@ -22,6 +22,17 @@ export class UserController {
         return `Hello ${firstName} ${lastName}`;
     }
 
+    @Get('/set-cookie')
+    setCookie(@Query('name') name: string, @Res() response: Response) {
+        response.cookie('name', name);
+        response.status(200).send('Cookie has been set');
+    }
+
+    @Get('/get-cookie')
+    getCookie(@Req() request: Request) {
+        return request.cookies['name']
+    }
+
     @Get('/sample-response')
     @Header('Content-Type', 'application/json')
     @HttpCode(200)
