@@ -1,9 +1,27 @@
 import { Controller, Get, Header, HttpCode, Param, Post, Query, Redirect, Req, Res } from '@nestjs/common';
 import type {HttpRedirectResponse} from '@nestjs/common';
 import type {Request, Response}  from 'express';
+import { UserService } from './user.service';
+import { Connection } from '../connection/connection';
+import { MailService } from '../mail/mail.service';
 
 @Controller('/api/users')
 export class UserController {
+    constructor(
+        private service: UserService,
+        private connection: Connection,
+        private mailService: MailService,
+    ) {
+
+    }
+
+    @Get('/connection')
+    async getConnectionName(): Promise<string> {
+        this.mailService.send();
+        return this.connection.getName();
+    }
+
+
     @Post()
     post(): string {
         return 'POST'
@@ -12,14 +30,6 @@ export class UserController {
     @Get('/sample')
     get(): string {
         return 'GETss'
-    }
-
-    @Get('/hello')
-    async sayHello(
-        @Query('first_name') firstName: string,
-        @Query('last_name') lastName: string
-    ): Promise<string> {
-        return `Hello ${firstName} ${lastName}`;
     }
 
     @Get('/set-cookie')
