@@ -36,7 +36,7 @@ export class UserController {
     @Get('/sample-response')
     @Header('Content-Type', 'application/json')
     @HttpCode(200)
-    getStampleResponse() : Record<string, string> {
+    getStampleResponse() : Record<string, string> { 
             return{
                 data: 'Hello World',
             };
@@ -49,6 +49,14 @@ export class UserController {
             statusCode: 302,
             url: '/api/users/sample-response',
         }
+    }
+
+    @Get('/view/hello')
+    viewHello(@Query('name') name:string, @Res() response: Response) {
+        response.render('index.html', { 
+            name: name,
+            title: 'My App' 
+        });
     }
 
     // @Get('/:id')
