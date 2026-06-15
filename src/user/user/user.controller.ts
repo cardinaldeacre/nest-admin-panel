@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Header, HttpCode, HttpException, Inject, Param, ParseIntPipe, Post, Query, Redirect, Req, Res, UseFilters, UseInterceptors, UsePipes, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Get, Header, HttpCode, HttpException, Inject, Param, ParseIntPipe, Post, Query, Redirect, Req, Res, UseFilters, UseGuards, UseInterceptors, UsePipes, ValidationPipe } from '@nestjs/common';
 import type {HttpRedirectResponse} from '@nestjs/common';
 import type {Request, Response}  from 'express';
 import { UserService } from './user.service';
@@ -11,6 +11,7 @@ import { LoginUserRequest, loginUserRequestValidation } from '../../model/login.
 import { TimeInterceptor } from '../../time/time.interceptor';
 import type { User } from '@prisma/client';
 import { Auth } from '../../auth/auth.decorator';
+import { RoleGuard } from '../../role/role.guard';
 
 @Controller('/api/users')
 export class UserController {
@@ -24,6 +25,7 @@ export class UserController {
     ) {}
 
     @Get('/current')
+    @UseGuards(new RoleGuard(['admin', 'operator']))
     current(@Auth() user: User): Record<string, any> {
         return {
             data: `Hello ${user.first_name} ${user.last_name}`,
