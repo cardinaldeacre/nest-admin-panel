@@ -4,6 +4,7 @@ import { UserService } from './user/user.service';
 import { Connection, MySQLConnection, PostgreSQLConnection } from './connection/connection';
 import { mailService, MailService } from './mail/mail.service';
 import { createUserRepository, UserRepository } from './user-repository/user-repository';
+import { MemberService } from './member/member.service';
 
 @Module({
     controllers: [UserController],
@@ -20,7 +21,10 @@ import { createUserRepository, UserRepository } from './user-repository/user-rep
             provide: UserRepository,
             useFactory: (connection: Connection) => createUserRepository(connection),
             inject: [Connection],
-        }
+        }, {
+            provide: 'EmailService',
+            useExisting: MailService,
+        }, MemberService
         
     ]
 })

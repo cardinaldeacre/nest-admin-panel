@@ -6,7 +6,7 @@ export class UserRepository {
     connection: Connection = new Connection;
 
     save() {
-        console.info(`Saving user to ${this.connection.getName()} database...`);
+        console.info(`Saving user to ${this.connection.getName()}`);
     }
 }
 
