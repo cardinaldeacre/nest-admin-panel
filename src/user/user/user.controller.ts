@@ -28,6 +28,11 @@ export class UserController {
         return this.connection.getName();
     }
 
+    @Get('/hello')
+    sayHello(@Query('name') name: string): string {
+        return this.service.sayHello(name);
+    }
+
     @Get('/create')
     async create(
         @Query('first_name') firstName: string, 
