@@ -5,6 +5,7 @@ import { UserModule } from './user/user.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { ValidationModule } from './validation/validation.module';
 import { LogMiddleware } from './log/log.middleware';
+import { AuthMiddleware } from './auth/auth.middleware';
 
 @Module({
   imports: [
@@ -20,6 +21,10 @@ export class AppModule implements NestModule {
     consumer.apply(LogMiddleware).forRoutes({
       path: '/api/*',
       method: RequestMethod.ALL
-  });
+    });
+    consumer.apply(AuthMiddleware).forRoutes({
+      path: '/api/*',
+      method: RequestMethod.GET
+    });
   }
 }
