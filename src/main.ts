@@ -12,6 +12,8 @@ async function bootstrap() {
   app.set('view engine', 'html');
   app.engine('html', mustache());
 
+  app.enableShutdownHooks();
+
   await app.listen(process.env.PORT ?? 3000);
 }
 bootstrap();

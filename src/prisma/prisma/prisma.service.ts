@@ -24,6 +24,12 @@ export class PrismaService
     }
 
     async onModuleInit() {
+        console.info('connect PrismaModule');
         await this.$connect();
+    }
+
+    onModuleDestroy() {
+        console.info('disconnect PrismaModule');
+        return this.$disconnect();
     }
 }
