@@ -1,4 +1,4 @@
-import { Controller, Get, Header, HttpCode, Inject, Param, Post, Query, Redirect, Req, Res } from '@nestjs/common';
+import { Controller, Get, Header, HttpCode, HttpException, Inject, Param, Post, Query, Redirect, Req, Res, UseFilters } from '@nestjs/common';
 import type {HttpRedirectResponse} from '@nestjs/common';
 import type {Request, Response}  from 'express';
 import { UserService } from './user.service';
@@ -6,6 +6,7 @@ import { Connection } from '../connection/connection';
 import { MailService } from '../mail/mail.service';
 import { UserRepository } from '../user-repository/user-repository';
 import { MemberService } from '../member/member.service';
+import { ValidationFilter } from '../../validation/validation.filter';
 
 @Controller('/api/users')
 export class UserController {
@@ -29,6 +30,7 @@ export class UserController {
     }
 
     @Get('/hello')
+    @UseFilters(ValidationFilter)
     sayHello(@Query('name') name: string): string {
         return this.service.sayHello(name);
     }
@@ -38,6 +40,13 @@ export class UserController {
         @Query('first_name') firstName: string, 
         @Query('last_name') lastName: string
     ): Promise<String> {
+        if (!firstName) {
+            throw new HttpException({
+                code: 400,
+                message: 'First name is required'
+            }, 400);
+        }
+
         await this.userRepository.save(firstName, lastName);
         return 'User created successfully';
     }
