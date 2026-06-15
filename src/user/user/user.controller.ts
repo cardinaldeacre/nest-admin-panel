@@ -1,4 +1,4 @@
-import { Controller, Get, Header, HttpCode, HttpException, Inject, Param, Post, Query, Redirect, Req, Res, UseFilters } from '@nestjs/common';
+import { Body, Controller, Get, Header, HttpCode, HttpException, Inject, Param, ParseIntPipe, Post, Query, Redirect, Req, Res, UseFilters, ValidationPipe } from '@nestjs/common';
 import type {HttpRedirectResponse} from '@nestjs/common';
 import type {Request, Response}  from 'express';
 import { UserService } from './user.service';
@@ -7,6 +7,7 @@ import { MailService } from '../mail/mail.service';
 import { UserRepository } from '../user-repository/user-repository';
 import { MemberService } from '../member/member.service';
 import { ValidationFilter } from '../../validation/validation.filter';
+import { LoginUserRequest, loginUserRequestValidation } from '../../model/login.model';
 
 @Controller('/api/users')
 export class UserController {
@@ -18,6 +19,12 @@ export class UserController {
         @Inject('EmailService') private emailService: MailService,
         private memberService: MemberService,
     ) {}
+
+    @UseFilters(ValidationFilter)
+    @Post('/login')
+    login(@Body(new ValidationPipe()) loginUserRequest: LoginUserRequest) {
+        return `Username: ${loginUserRequest.username}, Password: ${loginUserRequest.password}`;
+    }
 
     @Get('/connection')
     async getConnectionName(): Promise<string> {
@@ -98,8 +105,8 @@ export class UserController {
         });
     }
 
-    // @Get('/:id')
-    // getById(@Param('id') id: string): string {
-    //     return `GETsss ${id}`;
-    // }
+    @Get('/:id')
+    getById(@Param('id', ParseIntPipe) id: number): string {
+        return `GETsss ${id}`;
+    }
 }
