@@ -3,10 +3,12 @@ import { UserController } from './user/user.controller';
 import { UserService } from './user/user.service';
 import { Connection, MySQLConnection, PostgreSQLConnection } from './connection/connection';
 import { mailService, MailService } from './mail/mail.service';
-import { createUserRepository, UserRepository } from './user-repository/user-repository';
+import {  UserRepository } from './user-repository/user-repository';
 import { MemberService } from './member/member.service';
+import { PrismaModule } from '../prisma/prisma.module';
 
 @Module({
+    imports: [PrismaModule],
     controllers: [UserController],
     providers: [
         UserService, 
@@ -17,14 +19,12 @@ import { MemberService } from './member/member.service';
 
             provide: MailService,
             useValue: mailService,
-        },{
-            provide: UserRepository,
-            useFactory: (connection: Connection) => createUserRepository(connection),
-            inject: [Connection],
         }, {
             provide: 'EmailService',
             useExisting: MailService,
-        }, MemberService
+        }, 
+        MemberService,
+        UserRepository,
         
     ]
 })

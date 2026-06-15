@@ -21,12 +21,20 @@ export class UserController {
     @Get('/connection')
     async getConnectionName(): Promise<string> {
         this.mailService.send();
-        this.userRepository.save();
         this.emailService.send();
         console.info(`MemberService - Connection Name: ${this.memberService.getConnectionName()}`);
         this.memberService.sendEmail();
         
         return this.connection.getName();
+    }
+
+    @Get('/create')
+    async create(
+        @Query('first_name') firstName: string, 
+        @Query('last_name') lastName: string
+    ): Promise<String> {
+        await this.userRepository.save(firstName, lastName);
+        return 'User created successfully';
     }
 
     @Post()
