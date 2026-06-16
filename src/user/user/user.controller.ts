@@ -13,6 +13,7 @@ import type { User } from '@prisma/client';
 import { Auth } from '../../auth/auth.decorator';
 import { RoleGuard } from '../../role/role.guard';
 
+@UseGuards(RoleGuard)
 @Controller('/api/users')
 export class UserController {
     constructor(
@@ -25,7 +26,7 @@ export class UserController {
     ) {}
 
     @Get('/current')
-    @UseGuards(new RoleGuard(['admin', 'operator']))
+
     current(@Auth() user: User): Record<string, any> {
         return {
             data: `Hello ${user.first_name} ${user.last_name}`,
